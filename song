@@ -1,0 +1,23 @@
+#!/bin/bash
+
+tooltip=$(playerctl metadata --format '{{ artist }} - {{ title }}')
+
+
+if [ "$(playerctl -i firefox,chromium status)" = "Playing" ]
+then
+	output=$(playerctl -i firefox,chromium metadata --format '{{ trunc(artist,24) }} - {{ trunc(title,26) }}')
+        output2=$(playerctl -i firefox,chromium metadata --format '{{ duration(position) }} | {{ duration(mpris:length) }}')
+else
+if [ "$(playerctl -i firefox,chromium status)" = "Paused" ]
+then	
+	output=$(playerctl -i firefox,chromium metadata --format '{{ trunc(artist,24) }} - {{ trunc(title,26) }}')
+	output2=$(playerctl -i firefox,chromium metadata --format '{{ duration(position) }} | {{ duration(mpris:length) }}  {{ uc(status) }}')
+else
+	output=""
+
+fi
+fi
+
+output=$(echo $output | sed 's/\&/\&amp;/g')
+echo "<span size='medium'>$output</span>"
+echo $output2
